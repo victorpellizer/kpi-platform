@@ -1,170 +1,33 @@
 # kpi-platform
-Platform to display companies' KPIs
+Platform to display companies' KPIs, search based on KPI info and to create new KPI estimates, which also grant agentic access to data via MCP
 
-
-# Como funciona
-
-## Frontend
-
-O React ficará disponível em:
-
-```text
-http://localhost:5173
-```
-
-## Backend
-
-O FastAPI ficará disponível em:
-
-```text
-http://localhost:8000
-```
-
-## Banco PostgreSQL
-
-```text
-localhost:5432
-```
-
-## Redis
-
-```text
-localhost:6379
-```
-
----
-
-# Como iniciar tudo
-
-Na raiz do projeto:
+# Installing
+On project root run:
 
 ```bash
 docker compose up --build
 ```
 
----
+Docker may take a few minutes to finish the build
 
-# Comunicação frontend -> backend
+# Usage
 
-No frontend:
-
-```typescript
-baseURL: "http://localhost:8000"
-```
-
-O React fará chamadas para:
+With docker properly running, the app can be accessed at the url:
 
 ```text
-GET http://localhost:8000/kpis
+http://localhost:5173/
 ```
 
----
+## The initial page will be the dashboard
+Other pages (Search, Publish) can be accessed on the page header
 
-# Comunicação backend -> PostgreSQL
+### Dashboard
+- Choose the company which you want to visualize data from.
 
-O backend usa:
+- After choosing your company, you may filter the KPIs, sector of the company (if applicable) and date range that you want to visualize.
 
-```text
-postgresql://postgres:postgres@postgres:5432/kpidb
-```
+### Search
+- You may search for any KPIs related to a certain company name, kpi, or sector. The search engine is keyword friendly and case insensitive.
 
-Observe:
-
-```text
-@postgres
-```
-
-Este nome é o próprio nome do serviço Docker.
-
----
-
-# Comunicação backend -> Redis
-
-```text
-redis://redis:6379
-```
-
-Também usando o nome do serviço Docker.
-
----
-
-# Próximos arquivos necessários
-
-## backend/Dockerfile
-
-```dockerfile
-FROM python:3.12
-
-WORKDIR /app
-
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-```
-
----
-
-## frontend/Dockerfile
-
-```dockerfile
-FROM node:22
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-EXPOSE 5173
-
-CMD ["npm", "run", "dev", "--", "--host"]
-```
-
----
-
-# Fluxo final
-
-```text
-Frontend React
-    ↓
-FastAPI Backend
-    ↓
-Service Layer
-    ↓
-PostgreSQL
-
-LLM
-    ↓
-FastMCP
-    ↓
-Service Layer
-    ↓
-PostgreSQL
-```
-
----
-
-# Estrutura final recomendada
-
-```text
-kpi-platform/
-│
-├── frontend/
-│   ├── Dockerfile
-│   └── src/
-│
-├── backend/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── app/
-│
-└── docker-compose.yml
-```
+### Publish
+- You are able to publish new KPIs on this interface.
