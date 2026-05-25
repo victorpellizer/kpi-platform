@@ -1,6 +1,8 @@
+alembic
 fastapi
 uvicorn
 sqlalchemy
+pandas
 psycopg2-binary
 pydantic
 fastmcp
